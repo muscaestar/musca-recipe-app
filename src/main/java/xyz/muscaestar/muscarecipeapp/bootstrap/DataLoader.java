@@ -2,6 +2,7 @@ package xyz.muscaestar.muscarecipeapp.bootstrap;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,11 +13,12 @@ import xyz.muscaestar.muscarecipeapp.repositories.UnitOfMeasureRepository;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 
 @Slf4j
 @Component
+@Profile({"default"})
 public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     private CategoryRepository categoryRepository;
@@ -65,21 +67,15 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
                 "\n" +
                 "4 Serve: Serve immediately, or if making a few hours ahead, place plastic wrap on the surface of the guacamole and press down to cover it and to prevent air reaching it. (The oxygen in the air causes oxidation which will turn the guacamole brown.) Refrigerate until ready to serve.");
 
-        Optional<UnitOfMeasure> teaspoonOptional = unitOfMeasureRepository.findByDescription("Teaspoon");
-        if (!teaspoonOptional.isPresent()) {
-            throw new RuntimeException("!!!Expected UOM not found.");
-        }
-        Optional<UnitOfMeasure> unitOptional = unitOfMeasureRepository.findByDescription("Unit");
-        if (!unitOptional.isPresent()) {
-            throw new RuntimeException("!!!Expected UOM not found.");
-        }
-        Optional<UnitOfMeasure> tablespoonOptional = unitOfMeasureRepository.findByDescription("Tablespoon");
-        if (!tablespoonOptional.isPresent()) {
-            throw new RuntimeException("!!!Expected UOM not found.");
-        }
-        recipe1.addIngredient(new Ingredient("salt, more to taste", new BigDecimal(1/4), teaspoonOptional.get()));
-        recipe1.addIngredient(new Ingredient("serrano chiles, stems and seeds removed, minced", new BigDecimal(2), unitOptional.get()));
-        recipe1.addIngredient(new Ingredient("fresh lime juice or lemon juice", new BigDecimal(1), tablespoonOptional.get()));
+        Supplier<RuntimeException> uomSupplier = () -> new RuntimeException("!!!Expected UOM not found.");
+
+        UnitOfMeasure teaspoon = unitOfMeasureRepository.findByDescription("Teaspoon").orElseThrow(uomSupplier);
+        UnitOfMeasure unit = unitOfMeasureRepository.findByDescription("Unit").orElseThrow(uomSupplier);
+        UnitOfMeasure tablespoon = unitOfMeasureRepository.findByDescription("Tablespoon").orElseThrow(uomSupplier);
+
+        recipe1.addIngredient(new Ingredient("salt, more to taste", new BigDecimal(1/4), teaspoon));
+        recipe1.addIngredient(new Ingredient("serrano chiles, stems and seeds removed, minced", new BigDecimal(2), unit));
+        recipe1.addIngredient(new Ingredient("fresh lime juice or lemon juice", new BigDecimal(1), tablespoon));
 
         recipe1.setPrepTime(10);
 
@@ -123,9 +119,9 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
                 "\n" +
                 "5 Assemble the tacos: Slice the chicken into strips. On each tortilla, place a small handful of arugula. Top with chicken slices, sliced avocado, radishes, tomatoes, and onion slices. Drizzle with the thinned sour cream. Serve with lime wedges.");
 
-        recipe2.addIngredient(new Ingredient("salt, more to taste", new BigDecimal(1/4), teaspoonOptional.get()));
-        recipe2.addIngredient(new Ingredient("serrano chiles, stems and seeds removed, minced", new BigDecimal(2), unitOptional.get()));
-        recipe2.addIngredient(new Ingredient("fresh lime juice or lemon juice", new BigDecimal(1), tablespoonOptional.get()));
+        recipe2.addIngredient(new Ingredient("salt, more to taste", new BigDecimal(1/4), teaspoon));
+        recipe2.addIngredient(new Ingredient("serrano chiles, stems and seeds removed, minced", new BigDecimal(2), unit));
+        recipe2.addIngredient(new Ingredient("fresh lime juice or lemon juice", new BigDecimal(1), tablespoon));
 
         recipe2.setPrepTime(20);
 
