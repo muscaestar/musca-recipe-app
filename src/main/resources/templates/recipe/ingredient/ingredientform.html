@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ingredient Form</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"
+          th:href="@{/webjars/bootstrap/4.4.1/css/bootstrap.min.css}">
+
+    <script th:src="@{/webjars/jquery/3.0.0/jquery.min.js}"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"
+            th:src="@{/webjars/bootstrap/4.4.1/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<div class="container-fluid" style="margin-top: 20px">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <form  th:object="${ingredient}" th:action="@{'/recipe/' + ${ingredient.recipeId} + '/ingredient/'}"  method="post">
+            <div class="card bg-light mb-3" >
+
+                <div class="card-header">
+                    <h1 class="card-title text-center" >Edit Ingredient</h1>
+                    <a th:href="@{'/recipe/' + ${ingredient.recipeId}}"
+                       th:text="'Back to Recipe'"></a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive" >
+                        <table class="table table-hover ">
+                            <thead class="thead-inverse">
+                            <tr>
+                                <th>ID</th>
+                                <th>Amount</th>
+                                <th>UOM</th>
+                                <th>Description</th>
+
+                            </tr>
+                            </thead>
+
+                            <tr >
+
+<!--                                <td th:text="${ingredient.id}">-->
+                                <td>
+                                    <input type="hidden" th:field="*{id}"/>
+                                    <div th:text="*{id}"></div>
+                                </td>
+
+<!--                                <td th:text="${ingredient.amount}">-->
+                                <td>
+                                    <div class="form-group">
+                                            <input type="number" class="form-control" th:field="*{amount}"/>
+                                    </div>
+                                </td>
+
+<!--                                <td th:text="${ingredient.uom.description}">-->
+                                <td>
+                                    <div class="form-group">
+<!--                                        <input type="text" class="form-control" th:field="*{uom.id}"/>-->
+                                        <select class="form-control" name="uom.id">
+                                            <option th:each="uom : ${uomList}"
+                                                    th:value="${uom.id}"
+                                                    th:text="${uom.description}"
+                                                    th:selected="${uom.id.equals(ingredient.uom.id)}">options</option>
+                                        </select>
+                                    </div>
+                                </td>
+
+<!--                                <td th:text="${ingredient.description}">-->
+                                <td>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" th:field="*{description}"/>
+                                    </div>
+                                </td>
+
+                            </tr>
+                        </table>
+                        <button type="submit" class="btn btn-secondary">Submit</button>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ingredient List</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"
+          th:href="@{/webjars/bootstrap/4.4.1/css/bootstrap.min.css}">
+
+    <script th:src="@{/webjars/jquery/3.0.0/jquery.min.js}"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"
+            th:src="@{/webjars/bootstrap/4.4.1/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<div class="container-fluid" style="margin-top: 20px">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <div class="card bg-light mb-3" >
+
+                <div class="card-header">
+                    <div class="col-md-10">
+                        <h1 class="card-title text-center" >Ingredients</h1>
+                    </div>
+                    <div class="col-md-1">
+                        <a th:href="@{'/recipe/' + ${recipeId}}" th:text="'Back to Recipe'"></a>
+                    </div>
+                    <div class="col-md-1">
+                        <a class="btn btn-secondary" href="#" role="button"
+                           th:href="@{'/recipe/' + ${recipeId} + '/ingredient/new'}">New</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive" th:if="${not #lists.isEmpty(ingredients)}">
+                        <table class="table table-hover ">
+                            <thead class="thead-inverse">
+                            <tr>
+                                <th>ID</th>
+                                <th>Amount</th>
+                                <th>UOM</th>
+                                <th>Description</th>
+                                <th>View</th>
+                                <th>Update</th>
+                                <th>Delete</th>
+                            </tr>
+                            </thead>
+                            <tr th:remove="all">
+                                <td >123</td>
+                                <td >Tasty Goodnees 1</td>
+                                <td><a href="#">View</a></td>
+                            </tr>
+                            <tr th:remove="all">
+                                <td >12333</td>
+                                <td >Tasty Goodnees 2</td>
+                                <td><a href="#">View</a></td>
+                            </tr>
+                            <tr th:each="ing : ${ingredients}">
+                                <td th:text="${ing.id}">id</td>
+                                <td th:text="${ing.amount.intValue()}">amount</td>
+                                <td th:text="${ing.uom.description}">uom</td>
+                                <td th:text="${ing.description}">Description</td>
+                                <td><a href="#" th:href="@{'/recipe/' + ${ing.recipe.id} + '/ingredient/' + ${ing.id} + '/show'}" >View</a></td>
+                                <td><a href="#" th:href="@{'/recipe/' + ${ing.recipe.id} + '/ingredient/' + ${ing.id} + '/update'}" >Update</a></td>
+                                <td><a href="#" th:href="@{'/recipe/' + ${ing.recipe.id} + '/ingredient/' + ${ing.id} + '/delete'}" >Delete</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+</div>
+
+</body>
+</html>
